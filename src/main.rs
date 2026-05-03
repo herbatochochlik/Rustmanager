@@ -1,5 +1,17 @@
-mod filesystem;
+use std::env;
+mod console;
+mod graphical;
 
 fn main() {
-    filesystem::add_file("upload", "plik.txt", b"");
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() < 2 {
+        println!("No valid interface chosen");
+    } else if args[1] == "graphical" {
+        graphical::init();
+    } else if args[1] == "console" {
+        console::init();
+    } else {
+        println!("No valid interface chosen");
+    }
 }
