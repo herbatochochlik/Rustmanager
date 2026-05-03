@@ -3,6 +3,8 @@ use std::env;
 mod console;
 mod filesystem;
 mod graphical;
+mod logger;
+mod names;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
