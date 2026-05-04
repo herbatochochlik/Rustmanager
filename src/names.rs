@@ -34,3 +34,9 @@ pub fn uniq_folder_name(dir: &str, name: &str) -> PathBuf {
     }
     return path;
 }
+
+pub fn does_it_exist(dir: &str) -> bool {
+    let mut path = PathBuf::from(dir);
+
+    return path.exists();
+}
