@@ -1,10 +1,13 @@
 use std::env;
 
+use crate::structure::does_it_exist;
+
 mod console;
 mod filesystem;
 mod graphical;
 mod logger;
 mod names;
+mod structure;
 
 fn main() {
     let args: Vec<String> = env::args().collect();

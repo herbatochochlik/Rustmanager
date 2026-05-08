@@ -37,9 +37,3 @@ pub fn uniq_folder_name(dir: &str, name: &str) -> String {
 
     return temp_name;
 }
-
-pub fn does_it_exist(dir: &str) -> bool {
-    let mut path = PathBuf::from(dir);
-
-    return path.exists();
-}
