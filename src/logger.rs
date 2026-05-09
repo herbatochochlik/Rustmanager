@@ -19,5 +19,5 @@ pub fn new_log(log_type: LogType) {
         LogType::FILESTRUCT(msg) => log_msg = format!("{} [FILESTRUCT] {}\n", now, msg),
     }
 
-    filesystem::edit_file("upload/global.logs", log_msg);
+    filesystem::edit_file("upload/SYSTEM/global.logs", log_msg);
 }

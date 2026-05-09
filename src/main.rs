@@ -1,7 +1,5 @@
 use std::env;
 
-use crate::structure::does_it_exist;
-
 mod console;
 mod filesystem;
 mod graphical;

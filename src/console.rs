@@ -1,10 +1,14 @@
 use crate::filesystem;
 use crate::logger::{self, LogType};
+use crate::structure::{self, Option};
 use std::io::stdin;
 
 pub fn init() {
     println!("Initializing Console User Interface!");
     println!("Welcome to RustManager!");
+
+    structure::check_basic_structure(Option::FULL);
+
     logger::new_log(LogType::SYSTEM(String::from("Initialized CUI")));
 
     choose_command();
