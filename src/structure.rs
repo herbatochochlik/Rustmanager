@@ -1,6 +1,8 @@
 use crate::logger::{self, LogType};
+use mongodb::Client;
+use mongodb::options::{ClientOptions, ServerApi, ServerApiVersion};
 use std::fs::{self, File};
-use std::path::PathBuf;
+use std::path::{self, PathBuf};
 
 pub enum Option {
     FULL,
@@ -185,5 +187,82 @@ fn repair_basic_structure(options: Option) {
                 }
             },
         },
+    }
+}
+
+pub fn check_user_filestructure(folder_id: &str, options: UserOption) {
+    check_basic_structure(Option::USERS(UsersOption::FULL));
+
+    match options {
+        UserOption::FULL => {
+            let path = format!("upload/USERS/{}", &folder_id);
+            if !does_it_exist(&path) {
+                repair_user_structure(folder_id, UserOption::FULL);
+            } else {
+                check_user_filestructure(folder_id, UserOption::LOGS);
+                check_user_filestructure(folder_id, UserOption::CONFIG);
+                check_user_filestructure(folder_id, UserOption::FILES);
+            }
+        }
+        UserOption::LOGS => {
+            let path = format!("upload/USERS/{}/local.logs", &folder_id);
+            if !does_it_exist(&path) {
+                repair_user_structure(folder_id, UserOption::LOGS);
+            }
+        }
+        UserOption::CONFIG => {
+            let path = format!("upload/USERS/{}/local.config", &folder_id);
+            if !does_it_exist(&path) {
+                repair_user_structure(folder_id, UserOption::CONFIG);
+            }
+        }
+        UserOption::FILES => {
+            let path = format!("upload/USERS/{}/FILES", &folder_id);
+            if !does_it_exist(&path) {
+                repair_user_structure(folder_id, UserOption::FILES);
+            }
+        }
+    }
+}
+
+fn repair_user_structure(folder_id: &str, options: UserOption) {
+    match options {
+        UserOption::FULL => {
+            let path = format!("upload/USERS/{}", &folder_id);
+            fs::create_dir(&path).expect("Błąd tworzenia");
+            repair_user_structure(folder_id, UserOption::LOGS);
+            repair_user_structure(folder_id, UserOption::CONFIG);
+            repair_user_structure(folder_id, UserOption::FILES);
+            logger::new_log(LogType::FILESTRUCT(format!(
+                "Finished repairing USERS filestructure for user: {}",
+                &folder_id
+            )));
+        }
+        UserOption::LOGS => {
+            let mut path = PathBuf::from(format!("upload/USERS/{}", &folder_id));
+            path.push("local.logs");
+            File::create(&path).expect("Błąd tworzenia");
+            logger::new_log(LogType::FILESTRUCT(format!(
+                "Finished repairing USERS LOGS filestructure for user: {}",
+                &folder_id
+            )));
+        }
+        UserOption::CONFIG => {
+            let mut path = PathBuf::from(format!("upload/USERS/{}", &folder_id));
+            path.push("local.config");
+            File::create(&path).expect("Błąd tworzenia");
+            logger::new_log(LogType::FILESTRUCT(format!(
+                "Finished repairing USERS CONFIG filestructure for user: {}",
+                &folder_id
+            )));
+        }
+        UserOption::FILES => {
+            let path = format!("upload/USERS/{}/FILES", &folder_id);
+            fs::create_dir(&path).expect("Błąd tworzenia");
+            logger::new_log(LogType::FILESTRUCT(format!(
+                "Finished repairing USERS FILES filestructure for user: {}",
+                &folder_id
+            )));
+        }
     }
 }

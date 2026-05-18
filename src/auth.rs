@@ -1,8 +1,4 @@
-use mongodb::{
-    Client,
-    bson::doc,
-    options::{ClientOptions, ServerApi, ServerApiVersion},
-};
+use mongodb::{Client, bson::doc};
 use serde::{Deserialize, Serialize}; // Dodaj Serialize dla kompletności
 
 #[derive(Debug, Serialize, Deserialize)]
