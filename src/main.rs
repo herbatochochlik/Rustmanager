@@ -1,5 +1,6 @@
 use std::env;
 
+mod auth;
 mod console;
 mod filesystem;
 mod graphical;
@@ -7,7 +8,8 @@ mod logger;
 mod names;
 mod structure;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
