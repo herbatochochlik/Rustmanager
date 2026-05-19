@@ -10,7 +10,7 @@ pub fn add_file(dir: &str, name: &str) {
     path.push(&uniq_name);
 
     File::create(&path).expect("Błąd tworzenia");
-    logger::new_log(LogType::FILESYS(format!(
+    logger::new_global_log(LogType::FILESYS(format!(
         "Added file '{}' in '{}'",
         uniq_name, dir
     )));
@@ -21,7 +21,7 @@ pub fn add_folder(dir: &str, name: &str) {
     let uniq_name = names::uniq_folder_name(dir, name);
     path.push(&uniq_name);
     fs::create_dir(&path).expect("Błąd tworzenia");
-    logger::new_log(LogType::FILESYS(format!(
+    logger::new_global_log(LogType::FILESYS(format!(
         "Added folder '{}' in '{}'",
         uniq_name, dir
     )));

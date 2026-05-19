@@ -9,7 +9,7 @@ pub fn init() {
 
     structure::check_basic_structure(Option::FULL);
 
-    logger::new_log(LogType::SYSTEM(String::from("Initialized CUI")));
+    logger::new_global_log(LogType::SYSTEM(String::from("Initialized CUI")));
 
     choose_command();
 }

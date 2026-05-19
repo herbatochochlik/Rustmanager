@@ -115,7 +115,7 @@ fn repair_basic_structure(options: Option) {
             repair_basic_structure(Option::SYSTEM(SystemOption::FULL));
             repair_basic_structure(Option::USERS(UsersOption::FULL));
 
-            logger::new_log(LogType::FILESTRUCT(String::from(
+            logger::new_global_log(LogType::FILESTRUCT(String::from(
                 "Finished repairing FULL filestructure",
             )));
         }
@@ -124,7 +124,7 @@ fn repair_basic_structure(options: Option) {
                 fs::create_dir("upload/SYSTEM").expect("Błąd tworzenia");
                 repair_basic_structure(Option::SYSTEM(SystemOption::LOGS));
                 repair_basic_structure(Option::SYSTEM(SystemOption::CONFIG));
-                logger::new_log(LogType::FILESTRUCT(String::from(
+                logger::new_global_log(LogType::FILESTRUCT(String::from(
                     "Finished repairing SYSTEM filestructure",
                 )));
             }
@@ -132,7 +132,7 @@ fn repair_basic_structure(options: Option) {
                 let mut path = PathBuf::from("upload/SYSTEM");
                 path.push("global.config");
                 File::create(&path).expect("Błąd tworzenia");
-                logger::new_log(LogType::FILESTRUCT(String::from(
+                logger::new_global_log(LogType::FILESTRUCT(String::from(
                     "Finished repairing SYSTEM CONFIG filestructure",
                 )));
             }
@@ -140,7 +140,7 @@ fn repair_basic_structure(options: Option) {
                 let mut path = PathBuf::from("upload/SYSTEM");
                 path.push("global.logs");
                 File::create(&path).expect("Błąd tworzenia");
-                logger::new_log(LogType::FILESTRUCT(String::from(
+                logger::new_global_log(LogType::FILESTRUCT(String::from(
                     "Finished repairing SYSTEM LOGS filestructure",
                 )));
             }
@@ -149,7 +149,7 @@ fn repair_basic_structure(options: Option) {
             UsersOption::FULL => {
                 fs::create_dir("upload/USERS").expect("Błąd tworzenia");
                 repair_basic_structure(Option::USERS(UsersOption::ADMIN(UserOption::FULL)));
-                logger::new_log(LogType::FILESTRUCT(String::from(
+                logger::new_global_log(LogType::FILESTRUCT(String::from(
                     "Finished repairing USERS filestructure",
                 )));
             }
@@ -159,7 +159,7 @@ fn repair_basic_structure(options: Option) {
                     repair_basic_structure(Option::USERS(UsersOption::ADMIN(UserOption::LOGS)));
                     repair_basic_structure(Option::USERS(UsersOption::ADMIN(UserOption::CONFIG)));
                     repair_basic_structure(Option::USERS(UsersOption::ADMIN(UserOption::FILES)));
-                    logger::new_log(LogType::FILESTRUCT(String::from(
+                    logger::new_global_log(LogType::FILESTRUCT(String::from(
                         "Finished repairing USERS ADMIN filestructure",
                     )));
                 }
@@ -167,7 +167,7 @@ fn repair_basic_structure(options: Option) {
                     let mut path = PathBuf::from("upload/USERS/Admin");
                     path.push("local.logs");
                     File::create(&path).expect("Błąd tworzenia");
-                    logger::new_log(LogType::FILESTRUCT(String::from(
+                    logger::new_global_log(LogType::FILESTRUCT(String::from(
                         "Finished repairing USERS ADMIN LOGS filestructure",
                     )));
                 }
@@ -175,13 +175,13 @@ fn repair_basic_structure(options: Option) {
                     let mut path = PathBuf::from("upload/USERS/Admin");
                     path.push("local.config");
                     File::create(&path).expect("Błąd tworzenia");
-                    logger::new_log(LogType::FILESTRUCT(String::from(
+                    logger::new_global_log(LogType::FILESTRUCT(String::from(
                         "Finished repairing USERS ADMIN CONFIG filestructure",
                     )));
                 }
                 UserOption::FILES => {
                     fs::create_dir("upload/USERS/Admin/FILES").expect("Błąd tworzenia");
-                    logger::new_log(LogType::FILESTRUCT(String::from(
+                    logger::new_global_log(LogType::FILESTRUCT(String::from(
                         "Finished repairing USERS ADMIN FILES filestructure",
                     )));
                 }
@@ -233,36 +233,54 @@ fn repair_user_structure(folder_id: &str, options: UserOption) {
             repair_user_structure(folder_id, UserOption::LOGS);
             repair_user_structure(folder_id, UserOption::CONFIG);
             repair_user_structure(folder_id, UserOption::FILES);
-            logger::new_log(LogType::FILESTRUCT(format!(
+            logger::new_global_log(LogType::FILESTRUCT(format!(
                 "Finished repairing USERS filestructure for user: {}",
                 &folder_id
             )));
+            logger::new_local_log(
+                folder_id,
+                LogType::FILESTRUCT(String::from("Finished repairing USERS filestructure")),
+            );
         }
         UserOption::LOGS => {
             let mut path = PathBuf::from(format!("upload/USERS/{}", &folder_id));
             path.push("local.logs");
             File::create(&path).expect("Błąd tworzenia");
-            logger::new_log(LogType::FILESTRUCT(format!(
+            logger::new_global_log(LogType::FILESTRUCT(format!(
                 "Finished repairing USERS LOGS filestructure for user: {}",
                 &folder_id
             )));
+            logger::new_local_log(
+                folder_id,
+                LogType::FILESTRUCT(String::from("Finished repairing USERS LOGS filestructure")),
+            );
         }
         UserOption::CONFIG => {
             let mut path = PathBuf::from(format!("upload/USERS/{}", &folder_id));
             path.push("local.config");
             File::create(&path).expect("Błąd tworzenia");
-            logger::new_log(LogType::FILESTRUCT(format!(
+            logger::new_global_log(LogType::FILESTRUCT(format!(
                 "Finished repairing USERS CONFIG filestructure for user: {}",
                 &folder_id
             )));
+            logger::new_local_log(
+                folder_id,
+                LogType::FILESTRUCT(String::from(
+                    "Finished repairing USERS CONFIG filestructure",
+                )),
+            );
         }
         UserOption::FILES => {
             let path = format!("upload/USERS/{}/FILES", &folder_id);
             fs::create_dir(&path).expect("Błąd tworzenia");
-            logger::new_log(LogType::FILESTRUCT(format!(
+            logger::new_global_log(LogType::FILESTRUCT(format!(
                 "Finished repairing USERS FILES filestructure for user: {}",
                 &folder_id
             )));
+            logger::new_local_log(
+                folder_id,
+                LogType::FILESTRUCT(String::from("Finished repairing USERS FILES filestructure")),
+            );
         }
     }
 }
